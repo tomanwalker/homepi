@@ -20,7 +20,27 @@ $ nano -w /etc/fstab
 # add a line
 /dev/sda1       /mnt/mydrive    ntfs-3g permissions,locale=en_US.utf8   0       2
 
+# reboot and check drive permsissions
+ls -l /mnt
+
 -samba config-
+# smb.conf file
+
+-Web server-
 
 
+-Transmission-
+
+
+-Kodi-
+
+
+- Node-red Install-
+
+== Files and creds ==
+
+- Node-red DB -
+
+
+- Node-red Flow -
 

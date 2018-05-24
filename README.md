@@ -1,3 +1,4 @@
+
 # homepi
 Home digital assistant solution
 
@@ -10,37 +11,39 @@ Mobile apps: Trello, Wunderlist, Kore (Kodi remote control)
 
 -----------
 
-== INSTALLATION ==   
--update system-   
+### == INSTALLATION ==
+```shell
+** update system **
 sudo apt update && sudo apt upgrade
 
 -mount drive-
 $ nano -w /etc/fstab
 
-# add a line
+#add a line-
 /dev/sda1       /mnt/mydrive    ntfs-3g permissions,locale=en_US.utf8   0       2
 
 # reboot and check drive permsissions
 ls -l /mnt
+```
 
--samba config-
-# smb.conf file
+#### smb.conf file=   
+asd
 
--Web server-
-
-
--Transmission-
+#### Web server
 
 
--Kodi-
+#### Transmission
 
 
-- Node-red Install-
-
-== Files and creds ==
-
-- Node-red DB -
+#### Kodi
 
 
-- Node-red Flow -
+#### Node-red Install-
+
+#### == Files and creds ==
+
+#### - Node-red DB -
+
+
+#### - Node-red Flow -
 

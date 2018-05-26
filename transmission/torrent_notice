@@ -1,0 +1,5 @@
+#!/bin/bash
+
+curl -H "Content-Type:text/plain" \
+--data '{"msg":"Dowloaded: '"$TR_TORRENT_NAME"'", "topic":"torrent/complete"}' \
+"http://localhost:1880/notice"

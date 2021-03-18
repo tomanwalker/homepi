@@ -1,0 +1,90 @@
+@startuml
+' top to bottom direction
+'left to right direction
+' skinparam linetype ortho
+'scale 1024 width
+'scale 768 height
+
+
+class MOB as "Mobile" << (D,white) >> {
+    + Push
+    ----
+	* Browser
+	* Discord [STT]
+	* Trello
+	* Kodi remote
+}
+
+package "Private" {
+    
+    class PC as "Computer" << (D,white) >> {
+    	* Browser
+    	* Discord
+    	* Network drive [Samba]
+    	* TTS
+    }
+	class TV << (D,white) >> {
+		* CEC
+	}
+	class REMOTE as "TV Remote" << (D,white) >> {
+		
+	}
+	package "RPI" {
+	    class Portal << (A,white) >> {
+    		* WEB
+    	}
+    	class Feed << (A,white) >> {
+    		* RSS feed
+    		* Dropbox
+    		* Trello
+    	}
+    	class BOT as "Chatbot" << (A,white) >> {
+    		* HTTP
+    		* Exec [cat / ls]
+    		* CEC
+    		* STT
+    	}
+    	class HD as "Samba" << (S,white) >> {
+    		* Network storage
+    	}
+    	class TOR as "Transmission" << (S,white) >> {
+    		* WEB
+    	}
+		class KODI as "Kodi" << (S,white) >> {
+    		* CEC
+    		* RPC
+    		* WEB
+    	}
+	}
+}
+
+package "Internet" {
+    class DIS as "Discord" << (S,white) >> {
+		
+	}
+	class TRE as "Trello" << (S,white) >> {
+		* REST
+	}
+	class MEDIA as "Media content" << (M,white) >> {
+		* RSS
+	}
+	class DROP as "Dropbox" << (S,white) >> {
+		* REST
+	}
+}
+
+PC <--> DIS
+MOB <--> DIS
+
+Feed ..> BOT
+
+BOT <--> DIS
+KODI <..> TV
+TV <..> BOT
+REMOTE --> TV
+
+PC ..> BOT
+
+@enduml
+
+

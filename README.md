@@ -5,8 +5,9 @@ Home digital assistant solution
 ------------------
 HW: 
 - Raspberry pi (2)
-- External Hard Drive with power supply (Pi does not dive enough power)
 - Sense HAT
+- USB Stick (for backup)
+- (Optional) External Hard Drive with power supply (Pi does not dive enough power)
    
 SW-stack: 
 - Samba
@@ -32,7 +33,16 @@ sudo apt update && sudo apt -y upgrade
 
 ```
 
-### drive
+### usb (kodi)
+```
+## check connected
+df
+
+## automaount under media
+
+```
+
+### drive (kodi)
 ```
 #-mount drive-
 sudo nano -w /etc/fstab
@@ -45,12 +55,12 @@ sudo reboot now
 ls -l /mnt
 ```
 
-### samba
+### samba (kodi)
 ```shell
 sudo cp smb.conf /etc/samba/smb.conf
 ```
 
-### Transmission
+### Transmission (kodi)
 ```shell
 sudo apt install transmission-daemon
 

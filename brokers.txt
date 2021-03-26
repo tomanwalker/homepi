@@ -1,0 +1,60 @@
+
+# RAM usage comparision
+
+Looking for small one for RPi
+
+## Message brokers
+
+sudo docker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
+sudo docker run -d --name redis -p 6379:6379 redis
+sudo docker run -d --name mqtt -p 1883:1883 -p 9001:9001 eclipse-mosquitto
+
+
+CONTAINER ID   NAME       CPU %     MEM USAGE / LIMIT     MEM %     NET I/O       BLOCK I/O        PIDS
+8ba1612eaf3b   mqtt       0.05%     1.066MiB / 1.941GiB   0.05%     3.29kB / 0B   32.8kB / 41kB    1
+c89d66e566a0   redis      0.60%     2.391MiB / 1.941GiB   0.12%     3.4kB / 0B    139kB / 0B       5
+1a5299d0f538   rabbitmq   0.50%     96.95MiB / 1.941GiB   4.88%     7.36kB / 0B   7.38MB / 659kB   23
+
+
+## Databases
+
+note: -p <host>:<cont>
+
+sudo docker run -d --name ravendb -p 8080:8080 ravendb/ravendb
+sudo docker run -d --name orientdb -p 2424:2424 -p 2480:2480 -e ORIENTDB_ROOT_PASSWORD=rootpwd orientdb
+sudo docker run -d --name mongo -p 27018:27017 mongo
+sudo docker run -d --name couchdb -p 5984:5984 -e COUCHDB_USER=admin -e COUCHDB_PASSWORD=123 couchdb
+sudo docker run -d --name cassandra -p 7000:7000 cassandra
+sudo docker run -d --name leveldb -p 2012:2012 ekristen/leveldb
+sudo docker run -d --name pouchdb -p 5985:5984 scttmthsn/pouchdb-server
+sudo docker run -d --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=123 -d postgres
+
+## stats
+sudo docker stats
+
+sudo docker stats --no-stream \
+--format "table {{.Name}}\t{{.Container}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.MemPerc}}" | sort -k 4 -h
+
+NAME        CONTAINER      CPU %     MEM USAGE / LIMIT     MEM %
+mqtt       8ba1612eaf3b   0.04%     1.145MiB / 1.941GiB   0.06%
+redis      c89d66e566a0   0.46%     2.445MiB / 1.941GiB   0.12%
+couchdb    875e459dea63   0.28%     13.86MiB / 1.941GiB   0.70%
+mongo      9613b7cef56c   0.36%     23.52MiB / 1.941GiB   1.18%
+rabbitmq   1a5299d0f538   0.22%     28.7MiB / 1.941GiB    1.44%
+ravendb    cef8176abcc3   0.56%     34.04MiB / 1.941GiB   1.71%
+postgres   f9af086716b7   0.00%     36.03MiB / 1.941GiB   1.81%
+pouchdb    ade985f55c49   0.00%     36.3MiB / 1.941GiB    1.83%
+leveldb    27dca98f1b52   0.94%     39.34MiB / 1.941GiB   1.98%
+orientdb   87760bb26275   0.87%     104.6MiB / 1.941GiB   5.26%
+cassandra   7503e4f7ec7e   3.52%     1.066GiB / 1.941GiB   54.92%
+
+
+
+
+
+
+
+
+
+
+

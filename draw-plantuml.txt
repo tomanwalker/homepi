@@ -1,10 +1,11 @@
 @startuml
-' top to bottom direction
-'left to right direction
-' skinparam linetype ortho
-'scale 1024 width
-'scale 768 height
+'top to bottom direction
+left to right direction
+skinparam linetype ortho
+scale 1024 width
+scale 768 height
 
+note "TODO - Add legend,\nPlus for Expose, Minus for Uses" as N1
 
 class MOB as "Mobile" << (D,white) >> {
     + Push
@@ -15,7 +16,7 @@ class MOB as "Mobile" << (D,white) >> {
 	* Kodi remote
 }
 
-package "Private" {
+package "Home" {
     
     class PC as "Computer" << (D,white) >> {
     	* Browser
@@ -26,26 +27,22 @@ package "Private" {
 	class TV << (D,white) >> {
 		* CEC
 	}
-	class REMOTE as "TV Remote" << (D,white) >> {
-		
-	}
-	package "RPI" {
+	
+	package "pi-kodi" {
 	    class Portal << (A,white) >> {
     		* WEB
     	}
-    	class Feed << (A,white) >> {
-    		* RSS feed
-    		* Dropbox
-    		* Trello
-    	}
-    	class BOT as "Chatbot" << (A,white) >> {
+    	class NR_KODI as "Nodered" << (S,white) >> {
+    	    * Feed (RSS, Trello, Dropbox)
+    	    * Chatbot
     		* HTTP
     		* Exec [cat / ls]
     		* CEC
     		* STT
+    		* Redis
     	}
-    	class HD as "Samba" << (S,white) >> {
-    		* Network storage
+    	class NAT as "NAT" << (S,white) >> {
+    		* Samba
     	}
     	class TOR as "Transmission" << (S,white) >> {
     		* WEB
@@ -54,6 +51,23 @@ package "Private" {
     		* CEC
     		* RPC
     		* WEB
+    	}
+    	class USB as "usb" << (D,white) >> {
+    	}
+	}
+	
+	package "pi-hub" {
+	    class MSG as "Mosquitto" << (S,white) >> {
+    		* MQTT
+    	}
+	    class CACHE as "Redis" << (S,white) >> {
+	        
+    	}
+    	class NR_HUB as "Nodered" << (S,white) >> {
+    		* HTTP
+    		* Redis
+    	}
+    	class HAT as "SenseHat" << (D,white) >> {
     	}
 	}
 }
@@ -73,17 +87,30 @@ package "Internet" {
 	}
 }
 
-PC <--> DIS
-MOB <--> DIS
+MOB --> DIS
+TOR ..> USB
+NAT ..> USB
+"pi-hub" <---> "pi-kodi"
 
-Feed ..> BOT
+KODI ..> USB
+KODI ..> TV
 
-BOT <--> DIS
-KODI <..> TV
-TV <..> BOT
-REMOTE --> TV
+PC ..> "pi-hub"
+PC ..> "pi-kodi"
+PC --> DIS
 
-PC ..> BOT
+NR_KODI --> DIS
+NR_KODI ..> USB
+NR_KODI ..> TV
+
+NR_HUB ..> HAT
+NR_HUB ..> CACHE
+NR_HUB ..> MSG
+
+Portal ..> NR_KODI
+Portal ..> TOR
+Portal ..> KODI
+
 
 @enduml
 

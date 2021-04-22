@@ -1,11 +1,13 @@
 @startuml
+
 'top to bottom direction
 left to right direction
 skinparam linetype ortho
-scale 1024 width
-scale 768 height
+skinparam roundcorner 5
+scale 900 width
+scale 720 height
 
-note "TODO - Add legend,\nPlus for Expose, Minus for Uses" as N1
+note "Legend:\nGreen - Exposes\nBlack - Uses" as N1
 
 class MOB as "Mobile" << (D,white) >> {
     + Push
@@ -21,36 +23,43 @@ package "Home" {
     class PC as "Computer" << (D,white) >> {
     	* Browser
     	* Discord
-    	* Network drive [Samba]
+    	* NAT [Samba]
     	* TTS
     }
 	class TV << (D,white) >> {
-		* CEC
+		+ CEC
 	}
 	
 	package "pi-kodi" {
 	    class Portal << (A,white) >> {
-    		* WEB
+    		+ WEB
+    		----
+    		* Google calendar
+    		* Accu weather
+    		* REST
     	}
     	class NR_KODI as "Nodered" << (S,white) >> {
+    	    + HTTP
+    	    + Websocket
+    	    ----
     	    * Feed (RSS, Trello, Dropbox)
     	    * Chatbot
     		* HTTP
     		* Exec [cat / ls]
     		* CEC
     		* STT
+    		* MQTT
     		* Redis
     	}
     	class NAT as "NAT" << (S,white) >> {
-    		* Samba
+    		+ Samba
     	}
     	class TOR as "Transmission" << (S,white) >> {
-    		* WEB
+    		+ WEB
     	}
 		class KODI as "Kodi" << (S,white) >> {
+    		+ HTTP
     		* CEC
-    		* RPC
-    		* WEB
     	}
     	class USB as "usb" << (D,white) >> {
     	}
@@ -58,32 +67,43 @@ package "Home" {
 	
 	package "pi-hub" {
 	    class MSG as "Mosquitto" << (S,white) >> {
-    		* MQTT
+    		+ MQTT
     	}
 	    class CACHE as "Redis" << (S,white) >> {
-	        
+	        + Redis
     	}
     	class NR_HUB as "Nodered" << (S,white) >> {
+    		+ HTTP
+    		----
+    		* GPIO
     		* HTTP
+    		* MQTT
     		* Redis
     	}
     	class HAT as "SenseHat" << (D,white) >> {
+    	    + GPIO
     	}
 	}
 }
 
 package "Internet" {
     class DIS as "Discord" << (S,white) >> {
-		
+		* Push
 	}
 	class TRE as "Trello" << (S,white) >> {
-		* REST
+		+ REST
+		+ WEB
 	}
 	class MEDIA as "Media content" << (M,white) >> {
-		* RSS
+		+ RSS
 	}
 	class DROP as "Dropbox" << (S,white) >> {
-		* REST
+		+ REST
+		+ WEB
+	}
+	class WEAT as "Weather" << (S,white) >> {
+		+ REST
+		+ HTML widget
 	}
 }
 
@@ -106,10 +126,12 @@ NR_KODI ..> TV
 NR_HUB ..> HAT
 NR_HUB ..> CACHE
 NR_HUB ..> MSG
+NR_HUB ..> WEAT
 
 Portal ..> NR_KODI
 Portal ..> TOR
 Portal ..> KODI
+Portal ..> WEAT
 
 
 @enduml

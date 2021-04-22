@@ -1,0 +1,59 @@
+
+
+===## DONE ##===
+
+[03/2021]
+- WebPage with basic recording capabilities
+- Dont index params like <X>
+- Remind me X
+- Add "tomorrow" for reminder
+//## v1 video
+
+- hat-led >> mode - Temp number (primitive)
+- hat-led >> mode - random lines
+- hat-led >> mode - lamp
+- pi4 - Apt update alert
+- hub - combine Ram CPU Temps (Central hub)
+
+- combined Ram >> Chatbot adjust
+- combined Ram >> Portal adjust
+- combined Ram >> Delete old http
+- hat - alert temp
+- TV-Schedule to Send a confirmation when executed
+
+- "room temp" = Bot cmd
+- hat mode - sparkle (random color/random point)
+- hat >> heart
+- Bot.Core.Reminder - Add next week for reminder
+- USB stick - Database back
+
+- HTTP - Save incoming reminders
+- "room temp" - add to Portal
+- backup flows (hub to kodi.db / kode to kodi.db)
+- Hat.Led - Issue - Turning on "temp" not happens right away
+- hat-led >> lamp dimmable (more/less)
+
+- hat - alert humidity
+- central logs [mqtt] (Sys/Update)
+- Portal L&M (Logs)
+- Portal - USB stick usage
+- HTTP - Clean old reminders - Redis
+
+- hat - actual number display
+- hat - Number outside temp
+- HTTP - Show active reminders - Redis
+
+[02/2021]
+- Bot - RSS list / rss inform / pi ram
+- Bot - "hi" / "Are you there?" >> At your service
+- Bot - "Bills" >> Dropbox directory scan
+- Bot - "RSS last check" >> when did last time run? / Log Tail
+- Bot - "Command list" >> what are availible commands
+- Bot - "network / devices" >> Devices in Local network
+- Bot - "TV control" >> Control TV over HDMI (Can try once more later on with New TV)
+- Bot - Logs to Accept Number parameter to limit
+- Bot - TV events logging (homepi.log File)
+- Bot - "covid stats / corona state" >> Corona stats
+
+
+

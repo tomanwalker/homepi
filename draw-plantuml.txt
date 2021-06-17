@@ -4,19 +4,10 @@
 left to right direction
 skinparam linetype ortho
 skinparam roundcorner 5
-scale 900 width
-scale 720 height
+'scale 900 width
+'scale 720 height
 
 note "Legend:\nGreen - Exposes\nBlack - Uses" as N1
-
-class MOB as "Mobile" << (D,white) >> {
-    + Push
-    ----
-	* Browser
-	* Discord [STT]
-	* Trello
-	* Kodi remote
-}
 
 package "Home" {
     
@@ -26,6 +17,15 @@ package "Home" {
     	* NAT [Samba]
     	* TTS
     }
+    class MOB as "Mobile" << (D,white) >> {
+        + Push
+        ----
+    	* Browser
+    	* Discord [STT]
+    	* Trello
+    	* Kodi remote
+    }
+
 	class TV << (D,white) >> {
 		+ CEC
 	}
@@ -71,6 +71,10 @@ package "Home" {
     	}
 	    class CACHE as "Redis" << (S,white) >> {
 	        + Redis
+    	}
+    	class POUCHDB as "PouchDB" << (S,white) >> {
+	        + HTTP
+	        + WEB
     	}
     	class NR_HUB as "Nodered" << (S,white) >> {
     		+ HTTP
@@ -125,6 +129,7 @@ NR_KODI ..> TV
 
 NR_HUB ..> HAT
 NR_HUB ..> CACHE
+NR_HUB ..> POUCHDB
 NR_HUB ..> MSG
 NR_HUB ..> WEAT
 

@@ -38,7 +38,7 @@ sudo apt update && sudo apt -y upgrade
 ## check connected
 df
 
-## automaount under media
+## automaount under /media
 
 ```
 
@@ -84,6 +84,18 @@ sudo apt install lighttpd
 
 sudo cp lighttpd.conf /etc/lighttpd/lighttpd.conf
 ```
+
+### NFS
+Need to share "/media" Folder
+
+```
+## Server
+
+## Client
+mount -t nfs -o proto=tcp,port=2049 192.168.1.3:/ /mnt
+
+```
+
 ## == Files and creds ==
 
 ### - Node-red Flow -

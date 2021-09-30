@@ -28,6 +28,9 @@ var index = function(tableName){
 	// async
 	setTimeout(function(){
 		
+		var indexHolder = {};
+		var docList = listDocuments(tableName);
+		
 	}, 10);
 };
 

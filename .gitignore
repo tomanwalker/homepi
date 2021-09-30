@@ -11,9 +11,8 @@ bvt/report_bvt.xml
 test/performance/*.json
 data_migration/*
 analysisResults
-exivo_creds.json
-secret.json
-.secret.json
+**/secret.json
+**/.secret.json
 fvt/out.json
 package-lock.json
 test/report_lint.txt

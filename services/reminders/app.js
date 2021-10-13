@@ -2,10 +2,14 @@
 // ## dep
 var bull = require('bull');
 var got = require('got');
+var express = require('express');
+
+var server = express();
 
 // ## config
-var redisOpts = {
-	host: process.env.REDIS_HOST || '192.168.1.2'
+var config = {
+	PORT: Number(process.env.PORT || 9017),
+	REDIS_HOST: process.env.REDIS_HOST || '192.168.1.2'
 };
 
 var def_name = 'reminders';
@@ -18,7 +22,8 @@ module.exports = ns;
 // ## fund
 var log = {
 	debug: function(...msg){
-		msg[0] = 'rem >> ' + msg[0];
+		var date = new Date();
+		msg[0] = date.toISOString() + ' - rem >> ' + msg[0];
 		return console.log(...msg);
 	}
 };
@@ -34,7 +39,9 @@ ns.init = function(opts){
 	}
 	
 	var bullOpts = {
-		redis: redisOpts,
+		redis: {
+			host: config.REDIS_HOST
+		},
 		removeOnComplete: true,
 		removeOnFail: true
 	};
@@ -53,7 +60,7 @@ ns.init = function(opts){
 	
 	ns.queue.getJobCounts().then(function(result){
 		log.debug('init - getJobCounts - stats = %j', result);
-		if( result.active > 100 ){
+		if( result.active > 20 ){
 			log.debug('init - getJobCounts.done - queue is behind = %j', result);
 		}
 	}).catch(function(err){
@@ -75,8 +82,22 @@ ns.push = function(obj){
 };
 
 // ## flow
-if (require.main === module) {
+if( require.main === module ){
 	ns.init();
+	
+	// webserver
+	server.post('/reminders', function(req, res){
+		
+		log.debug('post.rem - start - body = %j', req.body);
+		
+		ns.push(req.body);
+		return res.json({ok: true});
+	});
+	
+	log.debug('main - server start - port = %s', config.PORT);
+	server.listen(config.PORT, function(){
+		log.debug('main - server started...');
+	});
 }
 
 

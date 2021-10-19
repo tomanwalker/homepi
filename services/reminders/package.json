@@ -4,7 +4,7 @@
 	"scripts": {
 		"start": "node app.js",
 		"test": "mocha --exit test/*.js",
-		"init": "cp homepi-reminder.sh /bin/...."
+		"deploy": "./deploy.sh"
 	},
 	"dependencies": {
 		"bull": "3.29.2",

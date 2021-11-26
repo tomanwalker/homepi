@@ -8,7 +8,7 @@
 # Description:       Redis based reminders microservice
 ### END INIT INFO
 
-SCRIPT="cd <DIR> & npm start"
+SCRIPT="cd <DIR> && npm start"
 RUNAS=pi
 
 PIDFILE=/var/run/node_rem.pid
@@ -35,5 +35,25 @@ stop() {
   kill -15 $(cat "$PIDFILE") && rm -f "$PIDFILE"
   echo 'Service stopped' >&2
 }
+
+case "$1" in 
+    start)
+       start
+       ;;
+    stop)
+       stop
+       ;;
+    restart)
+       stop
+       start
+       ;;
+    status)
+       cat $PIDFILE
+       ;;
+    *)
+       echo "Usage: $0 {start|stop|status|restart}"
+esac
+
+exit 0 
 
 

@@ -2,6 +2,10 @@
 
 ===## DONE ##===
 
+[06/2021]
+- Hub - BigSoftware( Docker )
+- Hat.Led - Switch on morning
+
 [04/2021]
 - Portal - change Wunder to Chatbot
 - Hat.Led - Switch off evening

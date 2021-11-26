@@ -86,6 +86,9 @@ if( require.main === module ){
 	ns.init();
 	
 	// webserver
+	server.get('/', function(req, res){
+		return res.json({ok: true});
+	});
 	server.post('/reminders', function(req, res){
 		
 		log.debug('post.rem - start - body = %j', req.body);

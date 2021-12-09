@@ -5,6 +5,7 @@ var got = require('got');
 var express = require('express');
 
 var server = express();
+server.use(express.json());
 
 // ## config
 var config = {
@@ -93,6 +94,13 @@ if( require.main === module ){
 		
 		log.debug('post.rem - start - body = %j', req.body);
 		
+		// .delay | .hook | .payload
+		ns.push(req.body);
+		return res.json({ok: true});
+	});
+	server.post('/api/reminders', function(req, res){
+		
+		log.debug('post.rem - start - body = %j', req.body);
 		ns.push(req.body);
 		return res.json({ok: true});
 	});

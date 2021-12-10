@@ -3,6 +3,7 @@ var target = require('../app');
 var express = require('express');
 
 var server = express();
+server.use(express.json());
 
 describe('basic', function(){
 	

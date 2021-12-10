@@ -54,10 +54,11 @@ ns.init = function(opts){
 		var obj = job.data;
 		if( obj.hook ){
 			try {
-				await got.post(obj.hook, obj.payload);
+				var result = await got.post(obj.hook, {json: obj.payload }).json();
+				log.debug('process - got.result = %j', result.body);
 			}
 			catch(err){
-				log.debug('process - got.catch = %j', err);
+				log.debug('process - got.catch = %j', err.response.body);
 				throw err;
 			}
 		}

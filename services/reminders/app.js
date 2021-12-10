@@ -48,15 +48,21 @@ ns.init = function(opts){
 	};
 	ns.queue = new bull(opts.name, bullOpts);
 	
-	ns.queue.process(function(job){
+	ns.queue.process(async function(job){
 		log.debug('process - job = %j', job);
 		
 		var obj = job.data;
 		if( obj.hook ){
-			return got.post(obj.hook, obj.payload);
+			try {
+				await got.post(obj.hook, obj.payload);
+			}
+			catch(err){
+				log.debug('process - got.catch = %j', err);
+				throw err;
+			}
 		}
 		
-		return Promise.resolve();
+		return true;
 	});
 	
 	ns.queue.getJobCounts().then(function(result){

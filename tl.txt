@@ -2,6 +2,13 @@
 
 ===## DONE ##===
 
+[09/2021]
+- Portal - updated Trello lists (next, inprog, completed)
+- Move WebPortfolio to Gitlab
+- Bot.Core - generic logic for Delay
+- Portal - JS based unified Menu
+- Clone WebPortfolio to HUB
+
 [06/2021]
 - Hub - BigSoftware( Docker )
 - Hat.Led - Switch on morning

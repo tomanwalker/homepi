@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,10 +12,11 @@
 
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
-
     <!-- Custom CSS -->
     <link href="css/sb-admin.css" rel="stylesheet">
-    <link href="css/custom.css" rel="stylesheet">
+	<link href="css/custom.css" rel="stylesheet">
+    <!-- Morris Charts CSS -->
+    <!--<link href="css/plugins/morris.css" rel="stylesheet">-->
     <!-- Custom Fonts -->
     <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
@@ -47,17 +47,18 @@
             </div>
             <!-- Top Menu Items -->
             <ul class="nav navbar-right top-nav">
-                <!-- alerts -->
+				<!-- alerts -->
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     <i class="fa fa-bell" id="alert_bell"></i> <b class="caret"></b></a>
                     <ul class="dropdown-menu alert-dropdown" id="notice_holder"></ul>
                 </li>
             </ul>
+            
             <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
             <div class="collapse navbar-collapse navbar-ex1-collapse">
-                <ul class="nav navbar-nav side-nav">
-                    <li>
+                <ul id="menu-ul" class="nav navbar-nav side-nav">
+                    <li >
                         <a href="index.html"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
                     </li>
                     <li>
@@ -66,7 +67,7 @@
                     <li>
                         <a href="torrent.html"><i class="fa fa-fw fa-desktop"></i> Torrent </a>
                     </li>
-                    <li class="active">
+                    <li>
                         <a href="trello.html"><i class="fa fa-fw fa-file"></i> Wishlist </a>
                     </li>
 					<li>
@@ -85,39 +86,18 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">
-                            Whishlist
-                            <small></small>
+                            Logs
                         </h1>
-                        <!--
-                        <ol class="breadcrumb">
-                            <li>
-                                <i class="fa fa-dashboard"></i>  <a href="index.html">Dashboard</a>
-                            </li>
-                            <li class="active">
-                                <i class="fa fa-file"></i> Blank Page
-                            </li>
-                        </ol>
-                    -->
                     </div>
                 </div>
                 <!-- /.row -->
-                <!-- Trello integration -->
-                <div class="row" id="trello_wrapper">
-                    <div class="col-lg-4">
-                        <h4 id="list_header_common">abc</h4>
-                        <ul class="list-group" id="list_common">
-                        </ul>
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        
+						<pre id="logs" > </pre>
                     </div>
-                    <div class="col-lg-4">
-                        <h4 id="list_header_nastya">abc</h4>
-                        <ul class="list-group" id="list_nastya">
-                        </ul>
-                    </div>
-                    <div class="col-lg-4">
-                        <h4 id="list_header_sasha">abc</h4>
-                        <ul class="list-group" id="list_sasha">
-                        </ul>
-                    </div>
+                    <!-- /.col-->
                 </div>
                 <!-- /.row -->
 
@@ -131,14 +111,15 @@
     <!-- /#wrapper -->
 
     <!-- jQuery -->
-    <script src="js/jquery.js"></script>
-
+    <!-- <script src="js/jquery.js"></script> -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
-    <!-- Wishlist custom -->
-    <script src="js/wishlist.js"></script>
-    <script type="text/javascript" src="js/notice.js"></script>
 
+    <!-- Custom code -->
+	<script type="text/javascript" src="js/menu.js"></script>
+	<script type="text/javascript" src="js/notice.js"></script> 
+	<script type="text/javascript" src="js/logs.js"></script> 
 </body>
 
 </html>

@@ -12,11 +12,11 @@
 
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
-
     <!-- Custom CSS -->
     <link href="css/sb-admin.css" rel="stylesheet">
 	<link href="css/custom.css" rel="stylesheet">
-	
+    <!-- Morris Charts CSS -->
+    <!--<link href="css/plugins/morris.css" rel="stylesheet">-->
     <!-- Custom Fonts -->
     <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
@@ -47,31 +47,29 @@
             </div>
             <!-- Top Menu Items -->
             <ul class="nav navbar-right top-nav">
-                <!-- alerts -->
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                    <i class="fa fa-bell" id="alert_bell"></i> <b class="caret"></b></a>
-                    <ul class="dropdown-menu alert-dropdown" id="notice_holder"></ul>
-                </li>
+				
+				
             </ul>
+            
             <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
             <div class="collapse navbar-collapse navbar-ex1-collapse">
-                <ul class="nav navbar-nav side-nav">
-                    <li>
+                <ul id="menu-ul" class="nav navbar-nav side-nav">
+                    <li >
                         <a href="index.html"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
                     </li>
                     <li>
                         <a href="tv.html"><i class="fa fa-fw fa-desktop"></i> TV </a>
                     </li>
-                    <li class="active">
+                    <li>
                         <a href="torrent.html"><i class="fa fa-fw fa-desktop"></i> Torrent </a>
                     </li>
-                    <li >
+                    <li>
                         <a href="trello.html"><i class="fa fa-fw fa-file"></i> Wishlist </a>
                     </li>
 					<li>
                         <a href="rss_page.html"><i class="fa fa-fw fa-file"></i> RSS </a>
                     </li>
+					
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
@@ -85,31 +83,66 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">
-                            Torrent 
-                            <small>transmission</small>
+                            Devices <small>monitoring</small>
                         </h1>
-                        <!--
-                        <ol class="breadcrumb">
-                            <li>
-                                <i class="fa fa-dashboard"></i>  <a href="index.html">Dashboard</a>
-                            </li>
-                            <li class="active">
-                                <i class="fa fa-file"></i> Blank Page
-                            </li>
-                        </ol>
-                    -->
                     </div>
                 </div>
                 <!-- /.row -->
+
                 <div class="row">
-                    <div class="col-lg-12">
-						<div class="iframe-wrapper iframe-wrapper-b"> 
-							<iframe src="http://192.168.1.3:9091" style="border: 0" 
-								frameborder="0" scrolling="no"></iframe>
-						</div>
-                    </div>
-                </div>
-                <!-- /.row -->
+					<div class="col-lg-6">
+						<div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-fw fa-dashboard"></i>Summary</h3>
+                            </div>
+                            <div class="panel-body">
+								<div class="table-responsive">
+                                <table class="table table-bordered table-hover">
+									<thead>
+										<tr><th>id</th><th>apt</th><th>os</th><th>ts</th></tr>
+									</thead>
+									<tbody id="sys-tbody" >
+										
+									</tbody>
+								</table>
+								</div><!-- /.table-responsive-->
+								
+								 
+                            </div><!-- /.panel/body-->
+                        </div><!-- /.panel-->
+					</div><!-- /.col-->
+					<div class="col-lg-3">
+						<div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-bar-chart-o fa-fw"></i>Kodi</h3>
+                            </div>
+                            <div class="panel-body">
+								<pre id="test"></pre>
+								
+                                Graph Mem/Cpu over time
+                            </div><!-- /.panel/body-->
+                        </div><!-- /.panel-->
+					</div><!-- /.col-->
+					<div class="col-lg-3">
+						<div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-bar-chart-o fa-fw"></i>Hub</h3>
+                            </div>
+                            <div class="panel-body">
+                                - Graph Mem/Cpu over time
+                            </div><!-- /.panel/body-->
+                        </div><!-- /.panel-->
+					</div><!-- /.col-->
+                </div><!-- /.row -->
+				
+				<div class="row">
+					<div class="col-lg-6">
+						<!-- Software list -->
+					</div><!-- /.col-->
+					<div class="col-lg-6">
+						<!-- Software list -->
+					</div><!-- /.col-->
+                </div><!-- /.row -->
 
             </div>
             <!-- /.container-fluid -->
@@ -121,13 +154,22 @@
     <!-- /#wrapper -->
 
     <!-- jQuery -->
-    <script src="js/jquery.js"></script>
-
+    <!-- <script src="js/jquery.js"></script> -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
-
-    <script type="text/javascript" src="js/notice.js"></script>
-
+    <!-- Morris Charts JavaScript
+    <script src="js/plugins/morris/raphael.min.js"></script>
+    <script src="js/plugins/morris/morris.min.js"></script>
+    <script src="js/plugins/morris/morris-data.js"></script>
+     -->
+    <!-- Custom code -->
+    <script type="text/javascript" src="js/common.js"></script> 
+	
+	<script type="text/javascript" src="js/menu.js"></script>
+	<script type="text/javascript" src="js/notice.js"></script> 
+	<script type="text/javascript" src="js/devices.js"></script> 
+	
 </body>
 
 </html>

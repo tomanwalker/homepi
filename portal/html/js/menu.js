@@ -14,6 +14,7 @@ var deviceStatusDrop = (
 );
 
 var menuList = [
+	'<li><a href="rss_page.html"><i class="fa fa-fw fa-file"></i> RSS </a></li>',
 	'<li><a href="trailers.html"><i class="fa fa-fw fa-desktop"></i> Trailers </a></li>',
 	deviceStatusDrop
 ];

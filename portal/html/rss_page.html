@@ -132,6 +132,7 @@
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
 	
+	<script type="text/javascript" src="js/common.js"></script>
 	<script type="text/javascript" src="js/menu.js"></script>
     <script type="text/javascript" src="js/notice.js"></script>
 	
@@ -145,11 +146,8 @@
 				var one_limit = (one_count > 5 ) ? one_count - 5 : 0;
 				
 				for (var z = one_count-1; z >= one_limit; z--){
-					var one_row = '<tr>'
-						+ '<td>' + one_src[z].title + '</td>'
-						+ '<td>' + one_src[z].pubDate + '</td>'
-						+ '<td>' + one_src[z].link + '</td>'
-						+ '</tr>';
+					
+					var one_row = trow(one_src[z].title, one_src[z].pubDate, one_src[z].link);
 					$('#' + tb_id + ' > tbody:last-child').append(one_row);
 				}
 			}
@@ -161,17 +159,15 @@
 				var one_src = info_obj[i];
 				
 				for (var z in one_src){
-					var one_row = '<tr>'
-						+ '<td>' + z + '</td>'
-						+ '<td>' + one_src[z] + '</td>'
-						+ '</tr>';
+					var one_row = trow(z, one_src[z]);
 					$('#' + tb_id + ' > tbody:last-child').append(one_row);
 				}
 			}
 		};
 		
 		//Get and Parse INFO
-		$.get("red/rss_info", function(data) {
+		var RSS_URL = "http://192.168.1.3:1880/rss_info";
+		$.get(RSS_URL, function(data) {
 			var my_obj = JSON.parse(data);
 			console.log("get_info - data: " + Object.keys(my_obj));
 			
@@ -179,7 +175,8 @@
 		});
 		
 		// Get and Parse LIST
-		$.get("red/rss_list", function(data) {
+		var RSS_LIST_URL = "http://192.168.1.3:1880/rss_list";
+		$.get(RSS_LIST_URL, function(data) {
 			var my_obj = JSON.parse(data);
 			console.log("get_list - data: " + Object.keys(my_obj));
 			

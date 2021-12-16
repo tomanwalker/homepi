@@ -7,26 +7,6 @@ function roundToTwo(num) {
 	return +(Math.round(num + "e+2")  + "e-2");
 }
 
-function get_shop_list(){
-	
-	var SHOP_LIST_URL = "red/shop_list";
-	
-	$.get(SHOP_LIST_URL, function(data) {
-		console.log("get_shop_list - data.length: " + data.length.toString());
-		
-		$("#shop_list").empty();
-		
-		if(data.length === 0){
-			$("#shop_list").append('<li class="list-group-item">' + "__________" + "</li>\n");
-		}
-		
-		for(var z in data){
-			$("#shop_list").append('<li class="list-group-item">' + data[z].title + "</li>\n");
-		}
-		
-	}, "json");
-}
-
 function get_pi_status(){
 	
 	var CPU_TEMP_MAX = 80;

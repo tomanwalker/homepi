@@ -1,0 +1,809 @@
+[
+    {
+        "id": "b2184ca7.59e64",
+        "type": "subflow",
+        "name": "Log.info",
+        "info": "",
+        "in": [
+            {
+                "x": 41,
+                "y": 85,
+                "wires": [
+                    {
+                        "id": "1e1e7701.c4f781"
+                    }
+                ]
+            }
+        ],
+        "out": []
+    },
+    {
+        "id": "1e1e7701.c4f781",
+        "type": "function",
+        "z": "b2184ca7.59e64",
+        "name": "homepi.log",
+        "func": "\nvar log_file = \"homepi.log\";\nvar log_dir = global.get('log_dir');\n\nvar date = new Date();\nmsg.payload = date.toISOString(); \n\nif(msg.level)\n    msg.payload += ` [${msg.level}]`;\n\nif(msg.topic)\n    msg.payload += \" >> \" + msg.topic;\n\nif(msg.listname)\n    msg.payload += \" :: \" + msg.listname;\n\nif(msg.device)\n    msg.payload += \" (\" + msg.device + \")\";\n\nif(msg.detail)\n    msg.payload += \" = \" + msg.detail;\n\nmsg.filename = log_dir + log_file;\nreturn msg;\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 196.50001525878906,
+        "y": 84.6666488647461,
+        "wires": [
+            [
+                "6ba6470.aac15b8"
+            ]
+        ]
+    },
+    {
+        "id": "6ba6470.aac15b8",
+        "type": "file",
+        "z": "b2184ca7.59e64",
+        "name": "homepi.log",
+        "filename": "",
+        "appendNewline": true,
+        "createDir": true,
+        "overwriteFile": "false",
+        "x": 377.5,
+        "y": 84.3333511352539,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "6a11109d.1b9148",
+        "type": "tab",
+        "label": "tv",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "4bb8a4bb.f35224",
+        "type": "function",
+        "z": "6a11109d.1b9148",
+        "name": "tv-req-fmt",
+        "func": "\n// ## conf\nvar hdmi = global.get('tv-hdmi');\nvar tvCommands = global.get('tv-cmd');\n\n// ## flow\nvar inputObj = (msg.payload.cmd || msg.payload);\nvar input = inputObj.trim().toLowerCase();\nvar inputArr = input.split(' ');\nvar action = inputArr[0];\n\nmsg.input = action; // cache for later\n\nvar found = tvCommands.find(x => x.name === action);\nif( !found ){\n    msg.statusCode = 404;\n    msg.payload = 'not found - ' + action;\n    return [msg, null];\n}\n\n//avoid override\nvar body = Object.assign({}, found.body);\n\nif( inputArr.length > 1 ){\n    \n    var second = inputArr[1];\n    if( isNaN(second) ){\n        var dev = hdmi.find(x => x.short === second);\n        if( !dev ){\n            msg.statusCode = 404;\n            msg.payload = 'not recognized - ' + second;\n            return [msg, null];\n        }\n        \n        body.args = body.args.replace('{arg}', dev.physical);\n    }\n    else {\n        msg.delay = Number(second);\n    }\n}\n\nmsg.payload = body;\nif( msg.delay ){\n    return [null, null, msg];\n}\nreturn [null, msg];\n\n\n",
+        "outputs": 3,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 400,
+        "y": 500,
+        "wires": [
+            [
+                "fe27131e.8181c8"
+            ],
+            [
+                "fe27131e.8181c8",
+                "57482c14.871dfc"
+            ],
+            [
+                "4c939ad7.e59214",
+                "fe27131e.8181c8"
+            ]
+        ]
+    },
+    {
+        "id": "6eaba393.742ba4",
+        "type": "inject",
+        "z": "6a11109d.1b9148",
+        "name": "on-start",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "",
+        "topic": "load/tv",
+        "payload": "tv loaded",
+        "payloadType": "str",
+        "x": 160,
+        "y": 80,
+        "wires": [
+            [
+                "c89b01fb.3d3848"
+            ]
+        ]
+    },
+    {
+        "id": "c89b01fb.3d3848",
+        "type": "function",
+        "z": "6a11109d.1b9148",
+        "name": "tv-conf",
+        "func": "\nvar hdmi = [\n    {physical: \"0.0.0.0\", name: \"Digital TV\", short: 'tv' },\n    {physical: \"2.0.0.0\", name: \"Nintendo\", short: 'nintendo' },\n    {physical: \"3.0.0.0\", name: \"Chromecast\", short: 'cast' },\n    {physical: \"4.0.0.0\", name: \"Kodi\", short: 'kodi' }\n];\n\nvar tvCommands = [\n    {\n        name: 'on', \n        desc:'turns On', \n        body: {\"source\":null,\"target\": 0,\"opcode\":\"IMAGE_VIEW_ON\"}\n    },\n    {\n        name: 'off', \n        desc:'switch off', \n        body: {\"source\":null,\"target\": \"0.0.0.0\", \"opcode\":\"STANDBY\"}\n    },\n    {\n        name: 'source',\n        desc: 'change output channel',\n        body: {\n            \"source\":\"unregistered\",\n            \"target\":\"BROADCAST\",\n            \"opcode\":\"active_source\",\n            \"args\": \"{arg}\"\n        }\n    }\n];\n\nvar hdmiIndexPhysical = {};\nhdmi.forEach(function(h){\n    hdmiIndexPhysical[h.physical] = h;\n});\n\n\nglobal.set('tv-cmd', tvCommands);\nglobal.set('tv-hdmi', hdmi);\nglobal.set('tv-hdmi-ip', hdmiIndexPhysical);\n\nreturn msg;\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 330,
+        "y": 80,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "cd12d3e7.0ae3f",
+        "type": "inject",
+        "z": "6a11109d.1b9148",
+        "name": "power tv OFF",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "topic": "",
+        "payload": "off",
+        "payloadType": "str",
+        "x": 130,
+        "y": 540,
+        "wires": [
+            [
+                "4bb8a4bb.f35224"
+            ]
+        ]
+    },
+    {
+        "id": "3a831221.a69f76",
+        "type": "debug",
+        "z": "6a11109d.1b9148",
+        "name": "tv-req-fmt",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 860,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "fb8a6bfc.f25538",
+        "type": "inject",
+        "z": "6a11109d.1b9148",
+        "name": "power tv ON",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "topic": "",
+        "payload": "on",
+        "payloadType": "str",
+        "x": 130,
+        "y": 500,
+        "wires": [
+            [
+                "4bb8a4bb.f35224"
+            ]
+        ]
+    },
+    {
+        "id": "f9408fbf.655fd8",
+        "type": "http in",
+        "z": "6a11109d.1b9148",
+        "name": "P /api/tv",
+        "url": "/api/tv",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 140,
+        "y": 460,
+        "wires": [
+            [
+                "883ea517.7ab18",
+                "4bb8a4bb.f35224"
+            ]
+        ]
+    },
+    {
+        "id": "fe27131e.8181c8",
+        "type": "http response",
+        "z": "6a11109d.1b9148",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 710,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "ce2764a6.226178",
+        "type": "debug",
+        "z": "6a11109d.1b9148",
+        "name": "cec-inbound",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 350,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "a47ec2bb.891ab",
+        "type": "http in",
+        "z": "6a11109d.1b9148",
+        "name": "G /api/tv",
+        "url": "/api/tv",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 140,
+        "y": 320,
+        "wires": [
+            [
+                "f90a165a.f751d8"
+            ]
+        ]
+    },
+    {
+        "id": "f90a165a.f751d8",
+        "type": "function",
+        "z": "6a11109d.1b9148",
+        "name": "tv-status-req-fmt",
+        "func": "\nvar activeSource = {\"command\":\"getactivesource\"};\nvar allDevicesState = \"\";\nvar tvPower = {\"command\":\"getpowerstatusname\", \"address\": \"0.0.0.0\"};\n\nmsg.payload = [\n    activeSource,\n    allDevicesState,\n    tvPower\n];\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 340,
+        "y": 320,
+        "wires": [
+            [
+                "c19fc047.61fa88"
+            ]
+        ]
+    },
+    {
+        "id": "d164f9f.9a27608",
+        "type": "inject",
+        "z": "6a11109d.1b9148",
+        "name": "get status",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 140,
+        "y": 360,
+        "wires": [
+            [
+                "f90a165a.f751d8"
+            ]
+        ]
+    },
+    {
+        "id": "c66ca791.a90a48",
+        "type": "debug",
+        "z": "6a11109d.1b9148",
+        "name": "cec-flow 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1180,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "6a02687c.613f6",
+        "type": "http response",
+        "z": "6a11109d.1b9148",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1170,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "c19fc047.61fa88",
+        "type": "split",
+        "z": "6a11109d.1b9148",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "x": 470,
+        "y": 360,
+        "wires": [
+            [
+                "244c2ceb.789c0c"
+            ]
+        ]
+    },
+    {
+        "id": "244c2ceb.789c0c",
+        "type": "change",
+        "z": "6a11109d.1b9148",
+        "name": "cmd-fmt",
+        "rules": [
+            {
+                "t": "move",
+                "p": "payload.address",
+                "pt": "msg",
+                "to": "address",
+                "tot": "msg"
+            },
+            {
+                "t": "move",
+                "p": "payload.command",
+                "pt": "msg",
+                "to": "command",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 580,
+        "y": 320,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "98fd3817.3a016",
+        "type": "join",
+        "z": "6a11109d.1b9148",
+        "name": "",
+        "mode": "auto",
+        "build": "merged",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": true,
+        "timeout": "",
+        "count": "",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 830,
+        "y": 320,
+        "wires": [
+            [
+                "af807931.19f64"
+            ]
+        ]
+    },
+    {
+        "id": "af807931.19f64",
+        "type": "function",
+        "z": "6a11109d.1b9148",
+        "name": "tv-status-res-fmt",
+        "func": "\n// ## config\nvar hdmi = global.get('tv-hdmi');\n//[{physical: \"0.0.0.0\", name: \"Digital TV\", short: 'tv' }]\nvar statusList = [\n    { name: \"ON\", val: 0},\n    { name: \"STANDBY\", val: 1}\n];\n\n// get results\nvar result = msg.payload;\nvar activeSource = result[0];\nvar tvPower = result[2];\n\nvar lastState = global.get('tv-state') || {};\nvar changeTime = lastState.change;\n\n// mapping\nvar deviceList = Object.values(result[1]);\nvar devices = deviceList.filter(function(x){\n    return (x.physical && x.physical.length > 0);\n}).map(function(x){\n    var targetDevice = hdmi.find(h => h.physical === x.physical);\n    if( targetDevice ){\n        x.osdname = targetDevice.name;\n    }\n    var targetStatus = statusList.find(s => s.val === x.power);\n    if( targetStatus ){\n        x.power = targetStatus.name;\n    }\n    return x;\n});\n\nvar activeDevice = hdmi.find(h => h.physical === activeSource);\nvar activeName = (activeDevice || {}).name;\n\nmsg.payload = {\n    tv: tvPower,\n    active: (activeName || 'tv'),\n    changed: changeTime,\n    devices: devices\n};\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 960,
+        "y": 360,
+        "wires": [
+            [
+                "c66ca791.a90a48",
+                "6a02687c.613f6"
+            ]
+        ]
+    },
+    {
+        "id": "11395e36.be244a",
+        "type": "debug",
+        "z": "6a11109d.1b9148",
+        "name": "cec-flow 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 840,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "f3e22b2b.1e45",
+        "type": "inject",
+        "z": "6a11109d.1b9148",
+        "name": "source tv",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "topic": "",
+        "payload": "source tv",
+        "payloadType": "str",
+        "x": 120,
+        "y": 580,
+        "wires": [
+            [
+                "4bb8a4bb.f35224"
+            ]
+        ]
+    },
+    {
+        "id": "2c82080.fd52778",
+        "type": "inject",
+        "z": "6a11109d.1b9148",
+        "name": "source cast",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "topic": "",
+        "payload": "source cast",
+        "payloadType": "str",
+        "x": 130,
+        "y": 620,
+        "wires": [
+            [
+                "4bb8a4bb.f35224"
+            ]
+        ]
+    },
+    {
+        "id": "493f014e.827a9",
+        "type": "inject",
+        "z": "6a11109d.1b9148",
+        "name": "source kodi",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "topic": "",
+        "payload": "source kodi",
+        "payloadType": "str",
+        "x": 130,
+        "y": 660,
+        "wires": [
+            [
+                "4bb8a4bb.f35224"
+            ]
+        ]
+    },
+    {
+        "id": "4c939ad7.e59214",
+        "type": "delay",
+        "z": "6a11109d.1b9148",
+        "name": "x-delay",
+        "pauseType": "delayv",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 520,
+        "y": 560,
+        "wires": [
+            [
+                "57482c14.871dfc",
+                "f50fc80d.a1f13"
+            ]
+        ]
+    },
+    {
+        "id": "57482c14.871dfc",
+        "type": "function",
+        "z": "6a11109d.1b9148",
+        "name": "pos",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 690,
+        "y": 540,
+        "wires": [
+            [
+                "3a831221.a69f76"
+            ]
+        ]
+    },
+    {
+        "id": "738b80bc.cf1a88",
+        "type": "function",
+        "z": "6a11109d.1b9148",
+        "name": "cec-event-fmt",
+        "func": "\nvar ev = msg.event;\nvar status = ev.data.str;\nif( status === 'STANDBY' ){\n    status = 'OFF';\n}\n\n// prepare logging\nmsg.topic = 'tv-event';\nmsg.detail = status;\n\n// store in memory\nvar lastState = global.get('tv-state') || {change: new Date() };\nvar date = new Date();\nvar prevDate = new Date(lastState.change);\nvar timeDiff = (date - prevDate);\n\nvar didChange = ( \n    lastState.status !== status \n    || timeDiff > 2000\n);\n\nif( !didChange ){\n    \n    msg.payload = lastState;\n    return [msg, null];\n    \n}\n\nlastState.status = status;\nlastState.change = date.toISOString();\nglobal.set('tv-state', lastState);\n\nreturn [null, msg];\n\n",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 680,
+        "y": 180,
+        "wires": [
+            [
+                "ccf3dd7d.47dc9"
+            ],
+            [
+                "b5830cd7.ce8bd",
+                "f11e939d.064e98"
+            ]
+        ]
+    },
+    {
+        "id": "b5830cd7.ce8bd",
+        "type": "subflow:b2184ca7.59e64",
+        "z": "6a11109d.1b9148",
+        "name": "",
+        "x": 880,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "f11e939d.064e98",
+        "type": "debug",
+        "z": "6a11109d.1b9148",
+        "name": "cec-ev-fmt",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 890,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "ccf3dd7d.47dc9",
+        "type": "debug",
+        "z": "6a11109d.1b9148",
+        "name": "cec-fmt-ignore",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 900,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "be75967d.ebe288",
+        "type": "function",
+        "z": "6a11109d.1b9148",
+        "name": "cec-ignore",
+        "func": "\n// ## config\nvar accept = ['REPORT_POWER_STATUS'];\n\nmsg.event = msg.payload;\nvar ev = msg.payload;\nvar evHash = [msg.event.event, msg.event.source, msg.event.target].join('-');\n\nif( ev.source !== 0 ){\n    return [msg, null];\n}\nif( !accept.includes(ev.event) ){\n    return [msg, null];\n}\n\nmsg.topic = ev.event;\nif( ev.data && ev.data.str ){\n    msg.topic += '/' + ev.data.str;\n}\nmsg.topic = msg.topic.toLowerCase();\n\nreturn [null, msg];\n\n",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 350,
+        "y": 160,
+        "wires": [
+            [
+                "53f4b4e1.b760ac"
+            ],
+            [
+                "4bf26e00.71b114"
+            ]
+        ]
+    },
+    {
+        "id": "4bf26e00.71b114",
+        "type": "delay",
+        "z": "6a11109d.1b9148",
+        "name": "rate",
+        "pauseType": "rate",
+        "timeout": "100",
+        "timeoutUnits": "milliseconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": true,
+        "x": 510,
+        "y": 180,
+        "wires": [
+            [
+                "738b80bc.cf1a88",
+                "2935dc5.de435a4"
+            ]
+        ]
+    },
+    {
+        "id": "b1cb6d47.15062",
+        "type": "debug",
+        "z": "6a11109d.1b9148",
+        "name": "cec-ignore",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 690,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "2935dc5.de435a4",
+        "type": "debug",
+        "z": "6a11109d.1b9148",
+        "name": "debug",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 610,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "53f4b4e1.b760ac",
+        "type": "delay",
+        "z": "6a11109d.1b9148",
+        "name": "rate",
+        "pauseType": "rate",
+        "timeout": "100",
+        "timeoutUnits": "milliseconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": true,
+        "x": 530,
+        "y": 120,
+        "wires": [
+            [
+                "b1cb6d47.15062"
+            ]
+        ]
+    },
+    {
+        "id": "883ea517.7ab18",
+        "type": "debug",
+        "z": "6a11109d.1b9148",
+        "name": "tv-post-in",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 380,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "f50fc80d.a1f13",
+        "type": "function",
+        "z": "6a11109d.1b9148",
+        "name": "inform",
+        "func": "\nmsg.payload = {\n  msg: 'Done: tv - ' + msg.input  \n};\nmsg.method = 'POST';\nmsg.url = 'http://127.0.0.1:1880/api/msg';\n\nreturn msg;\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 670,
+        "y": 600,
+        "wires": [
+            [
+                "a899b954.d7f708"
+            ]
+        ]
+    },
+    {
+        "id": "a899b954.d7f708",
+        "type": "http request",
+        "z": "6a11109d.1b9148",
+        "name": "hook",
+        "method": "use",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 820,
+        "y": 620,
+        "wires": [
+            []
+        ]
+    }
+]

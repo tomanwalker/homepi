@@ -66,33 +66,27 @@
             </div>
             <!-- /.navbar-collapse -->
         </nav>
-
-        <div id="page-wrapper">
-
-            <div class="container-fluid">
-
-				{{body}}
-
-            </div>
-            <!-- /.container-fluid -->
-
-        </div>
-        <!-- /#page-wrapper -->
-
-    </div>
-    <!-- /#wrapper -->
-
-    <!-- jQuery -->
+		
+	<!-- jQuery -->
     <!-- <script src="js/jquery.js"></script> -->
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
     
 	<!-- Custom code -->
-    <script type="text/javascript" src="js/myjs.js"></script>
+	<script type="text/javascript" src="js/common.js"></script>
 	<script type="text/javascript" src="js/menu.js"></script>
+
+	<div id="page-wrapper">
+		<div class="container-fluid">
+			{{body}}
+		</div><!-- /.container-fluid -->
+	</div><!-- /#page-wrapper -->
+	</div><!-- /#wrapper -->
+	
 	{{scripts}}
 	
 </body>
-
 </html>
+
+

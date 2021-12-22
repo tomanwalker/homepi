@@ -12,7 +12,26 @@ var server = express();
 server.use(express.json());
 
 // ## functions
-//var render = function(page, bag, template){ };
+var render = function(page, bag, template){ 
+	
+	var VIEW_EXT = 'html';
+	if( typeof(template) === 'undefined' ){
+		var template = 'template';
+	}
+	
+	var pageContent = null;
+	try{
+		pageContent = fs.readFileSync('views/' + page + '.' + VIEW_EXT, 'utf8');
+	}
+	catch(err){
+		throw err;
+	}
+	
+	var mainContent = fs.readFileSync('views/' + template + '.' + VIEW_EXT, 'utf8');
+	var merged = mainContent.replace('{{body}}', pageContent);
+	
+	return merged;
+};
 
 // ## routes
 server.get('*', function(req, res, next){
@@ -27,7 +46,6 @@ server.get('*', function(req, res, next){
 	}
 	
 	console.log('router.base - start - req.originalUrl = %s', req.originalUrl);
-	var VIEW_EXT = 'html';
 	
 	/*
 		if( url === '/' ){
@@ -38,25 +56,20 @@ server.get('*', function(req, res, next){
 		
 	};
 	var page = req.originalUrl.substring(1);
-	page = page.replace( '.' + VIEW_EXT, '');
+	page = page.replace( '.html', '');
 	if( mapper[page] ){
 		page = mapper[page];
 	}
 	console.log('router.base - mapper - page = <%s>', page);
 	
-	var template = 'template';
-	var mainContent = fs.readFileSync('views/' + template + '.' + VIEW_EXT, 'utf8');
-	var pageContent = null;
-	try{
-		pageContent = fs.readFileSync('views/' + page + '.' + VIEW_EXT, 'utf8');
+	try{ 
+		var merged = render(page, res.locals);
+		return res.send(merged);
 	}
 	catch(err){
 		console.log('router.base - page.catch - err = %j', err);
 		return next();
 	}
-	
-	var merged = mainContent.replace('{{body}}', pageContent);
-	return res.send(merged);
 	
 });
 

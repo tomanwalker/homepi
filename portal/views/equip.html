@@ -1,22 +1,67 @@
 
-<!-- Equipment -->
-<div class="row" id="light_wrapper">
-	<div class="col-lg-4">
-		<h4 id="list_header_1">Bedroom</h4>
-		<ul class="list-group" id="list_1">
-		</ul>
-	</div>
-	<div class="col-lg-4">
-		<h4 id="list_header_2">Living</h4>
-		<ul class="list-group" id="list_2">
-		</ul>
-	</div>
-	<div class="col-lg-4">
-		<h4 id="list_header_3">Kid</h4>
-		<ul class="list-group" id="list_3">
-		</ul>
+<!-- Page Heading -->
+<div class="row">
+	<div class="col-lg-12">
+		<h1 class="page-header">
+			Equipment
+		</h1>
 	</div>
 </div>
 <!-- /.row -->
+
+<!-- Equipment -->
+<div class="row" id="light_wrapper">
+	<div class="col-lg-12">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title"><i class="fa fa-fw fa-lightbulb-o"></i>Light</h3>
+			</div>
+			<div class="panel-body">
+				<div class="table-responsive">
+				<table class="table table-bordered table-hover">
+					<thead>
+						<tr><th>name</th><th>state</th><th>brightness</th><th>colour</th></tr>
+					</thead>
+					<tbody id="tbody-rooms" >
+						
+					</tbody>
+				</table>
+				</div><!-- /.table-responsive-->
+				
+				<span id='ts-rooms' class="font-italic" > </span>
+			</div><!-- /.panel/body-->
+		</div><!-- /.panel-->
+	</div><!-- /.col -->
+	
+</div>
+<!-- /.row -->
+
+<script>
+	
+	var getEquip = async function(){
+		var data = await getPromise(SVC.hub + '/api/cache/cron:hue:groups');
+		console.log('equip - data = %j', data);
+		$('#tbody-rooms').html('');
+		
+		var current = new Date();
+		var ts = new Date(data.ts);
+		var diff = Math.round((current - ts) / (1000 * 60));
+		$('#ts-rooms').text(diff + ' minutes ago');
+		
+		data.rows.forEach(function(s){
+			var row = trow(
+				s.name, 
+				(s.on || 'off' ), 
+				s.per, 
+				(s.state.ct || '')
+			);
+			$('#tbody-rooms').append(row);
+		});
+		
+	};
+	
+	run_loop(getEquip, 5000);
+	
+</script>
 
 

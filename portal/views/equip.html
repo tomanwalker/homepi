@@ -40,7 +40,7 @@
 	
 	var getEquip = async function(){
 		var data = await getPromise(SVC.hub + '/api/cache/cron:hue:groups');
-		console.log('equip - data = %j', data);
+		//console.log('equip - data = %j', data);
 		$('#tbody-rooms').html('');
 		
 		var current = new Date();
@@ -49,9 +49,24 @@
 		$('#ts-rooms').text(diff + ' minutes ago');
 		
 		data.rows.forEach(function(s){
+			
+			var tg_id = "toggle-" + s.kind;
+			var tg_on_cs = 'btn-default';
+			var tg_off_cs = 'btn-primary active';
+			
+			if( s.on ){
+				tg_on_cs = 'btn-primary active';
+				tg_off_cs = 'btn-default';
+			}
+			
+			var tg = '<div class="btn-group btn-toggle" id="' + tg_id + '" st="'+s.on+'">'
+				+ '<button class="btn '+tg_on_cs+'">ON</button>'
+				+ '<button class="btn '+tg_off_cs+'">OFF</button>'
+				+ '</div>';
+			
 			var row = trow(
 				s.name, 
-				(s.on || 'off' ), 
+				tg, 
 				s.per, 
 				(s.state.ct || '')
 			);
@@ -60,7 +75,33 @@
 		
 	};
 	
-	run_loop(getEquip, 5000);
+	var interHolder = run_loop(getEquip, 5000);
+	
+	$('#tbody-rooms').on('click', '.btn-toggle', async function() {
+		
+		clearInterval(interHolder);
+		var el_id = $(this).attr("id");
+		var prev = $(this).attr("st") === 'true';
+		
+		console.log('toogle click - id = %s | prev = %s', el_id, prev);
+		
+		var obj = {
+			room: el_id.replace("toggle-", ""),
+			state: {
+				on: !prev
+			}
+		};
+		
+		$(this).find('.btn').toggleClass('active'); // effect on both buttons
+		$(this).find('.btn').toggleClass('btn-primary'); 
+		$(this).find('.btn').toggleClass('btn-default'); 
+		
+		var res = await postPromise(SVC.hub + '/api/hue', obj);
+		
+		setTimeout(function(){
+			interHolder = run_loop(getEquip, 5000);
+		}, 500);
+	});
 	
 </script>
 

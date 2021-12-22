@@ -40,6 +40,7 @@ server.get('*', function(req, res, next){
 		req.originalUrl.includes('.js')
 		|| req.originalUrl.includes('.css')
 		|| req.originalUrl.includes('.ico')
+		|| req.originalUrl.includes('.woff')
 	);
 	if( nonRelevant ){
 		return next();

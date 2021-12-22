@@ -2,8 +2,8 @@
 var Global_Notice_List = [];
 
 function get_notice(limit){
-	//http://192.168.1.3/
-	var NOTICE_URL = "red/notice?limit=" + limit;
+	
+	var NOTICE_URL = "http://192.168.1.3:1880/notice?limit=" + limit;
 	
 	/* 
 	 * TODO IF isFirstCall

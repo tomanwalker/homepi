@@ -75,7 +75,8 @@
 		
 	};
 	
-	var interHolder = run_loop(getEquip, 5000);
+	var interTime = 1000;
+	var interHolder = run_loop(getEquip, interTime);
 	
 	$('#tbody-rooms').on('click', '.btn-toggle', async function() {
 		
@@ -99,8 +100,8 @@
 		var res = await postPromise(SVC.hub + '/api/hue', obj);
 		
 		setTimeout(function(){
-			interHolder = run_loop(getEquip, 5000);
-		}, 500);
+			interHolder = run_loop(getEquip, interTime);
+		}, 2000);
 	});
 	
 </script>

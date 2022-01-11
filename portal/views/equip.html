@@ -64,10 +64,15 @@
 				+ '<button class="btn '+tg_off_cs+'">OFF</button>'
 				+ '</div>';
 			
+			var bri = '<input type="number" id="bri-' + s.kind + '" step="10" '
+				+ 'min="0" max="100" value="' + s.per + '"/>';
+			
+			// 343 - normal, 443 - warm, ?? - cold
+			
 			var row = trow(
 				s.name, 
 				tg, 
-				s.per, 
+				bri, 
 				(s.state.ct || '')
 			);
 			$('#tbody-rooms').append(row);
@@ -102,6 +107,7 @@
 		setTimeout(function(){
 			interHolder = run_loop(getEquip, interTime);
 		}, 2000);
+		
 	});
 	
 </script>

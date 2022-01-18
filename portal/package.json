@@ -3,7 +3,8 @@
 	"version": "2.0.0",
 	"description": "Web portal for HomePI",
 	"scripts": {
-		"start": "node server.js"
+		"start": "env PORT=80 node server.js",
+		"dev": "node server.js"
 	},
 	"dependencies": {
 		"express": "^4.17.1"

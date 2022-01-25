@@ -50,7 +50,8 @@
 		
 		data.rows.forEach(function(s){
 			
-			var tg_id = "toggle-" + s.kind;
+			var room_id = s.kind.replace(' ', '_');
+			var tg_id = "toggle-" + room_id;
 			var tg_on_cs = 'btn-default';
 			var tg_off_cs = 'btn-primary active';
 			
@@ -64,7 +65,7 @@
 				+ '<button class="btn '+tg_off_cs+'">OFF</button>'
 				+ '</div>';
 			
-			var bri = '<input type="number" id="bri-' + s.kind + '" step="10" '
+			var bri = '<input type="number" id="bri-' + room_id + '" step="10" '
 				+ 'min="0" max="100" value="' + s.per + '"/>';
 			
 			// 343 - normal, 443 - warm, ?? - cold
@@ -92,7 +93,7 @@
 		console.log('toogle click - id = %s | prev = %s', el_id, prev);
 		
 		var obj = {
-			room: el_id.replace("toggle-", ""),
+			room: el_id.replace("toggle-", "").replace('_', ' '),
 			state: {
 				on: !prev
 			}
@@ -106,7 +107,7 @@
 		
 		setTimeout(function(){
 			interHolder = run_loop(getEquip, interTime);
-		}, 2000);
+		}, 2500);
 		
 	});
 	

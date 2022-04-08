@@ -2,6 +2,21 @@
 
 ===## DONE ##===
 
+[12/2021]
+- Reminders v2 - NodeRed change
+- Lights >> Light Status
+- Lights >> Morning alarm 
+- Portal.Equipment >> Lights view-only table
+- Equipment >> read Xiaomi Temperature
+
+[11/2021]
+- [Issue] Negative outside Temp
+- Decomission pi2b (Disconnect Radio / Disconnect HDMI )
+- Reminders v2 - deploy 
+- Take BKP to GIT
+- Move WebPortfolio to HUB
+>> Router PortForward 8080 --> 80
+
 [10/2021]
 - Reminders v2 - Autostart script
 

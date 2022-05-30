@@ -2,6 +2,12 @@
 
 ===## DONE ##===
 
+[01/2022]
+- Move WebPortfolio to HUB >> Close Arvixe
+- Decomission pi2b >> Move WebSite ( Deploy & Service )
+- Equipment >> Light control to Portal
+- Decomission pi2b >> Add Storage to PI4 (modify backups)
+
 [12/2021]
 - Reminders v2 - NodeRed change
 - Lights >> Light Status

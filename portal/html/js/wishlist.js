@@ -1,6 +1,6 @@
 
 // ## conf
-var CARDS_URL = "http://192.168.1.3:1880/trello_cards";
+var CARDS_URL = "http://192.168.1.2:1880/api/db/portal/trello_cards";
 
 // ## fund
 function list_filter(arr, l_name){

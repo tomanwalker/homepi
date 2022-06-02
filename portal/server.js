@@ -54,7 +54,7 @@ server.get('*', function(req, res, next){
 		}
 	*/
 	var mapper = {
-		
+		'': 'index'
 	};
 	var page = req.originalUrl.substring(1);
 	page = page.replace( '.html', '');

@@ -2,6 +2,10 @@
 
 ===## DONE ##===
 
+[02/2022]
+- Decomission pi2b >> Move NodeRed (Feed)
+- Decomission pi2b >> Remove pi2 Storage
+
 [01/2022]
 - Move WebPortfolio to HUB >> Close Arvixe
 - Decomission pi2b >> Move WebSite ( Deploy & Service )

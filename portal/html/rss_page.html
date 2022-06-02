@@ -165,25 +165,25 @@
 			}
 		};
 		
+		// ## config
+		var RSS_DATA_HOST = 'http://192.168.1.2:1880';
 		//Get and Parse INFO
-		var RSS_URL = "http://192.168.1.3:1880/rss_info";
+		var RSS_URL = RSS_DATA_HOST + "/api/db/portal/rss_inform";
 		$.get(RSS_URL, function(data) {
-			var my_obj = JSON.parse(data);
-			console.log("get_info - data: " + Object.keys(my_obj));
-			
-			populate_table_arr('rss_info', my_obj);
+			console.log("get_info - data: " + data);
+			populate_table_arr('rss_info', data);
 		});
 		
 		// Get and Parse LIST
-		var RSS_LIST_URL = "http://192.168.1.3:1880/rss_list";
+		var RSS_LIST_URL = RSS_DATA_HOST + "/api/db/config/rss_list";
 		$.get(RSS_LIST_URL, function(data) {
-			var my_obj = JSON.parse(data);
-			console.log("get_list - data: " + Object.keys(my_obj));
-			
-			populate_table_obj('rss_list', my_obj);
+			console.log("get_list - data: " + data);
+			populate_table_obj('rss_list', data);
 		});
 	</script>
 
 </body>
 
 </html>
+
+

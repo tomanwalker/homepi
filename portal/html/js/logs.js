@@ -2,7 +2,7 @@
 
 function get_logs(){
 	
-	var LOGS_URL = "http://192.168.1.3:1880/api/logs?_limit=40";
+	var LOGS_URL = "http://192.168.1.2:1880/api/logs?_limit=30";
 	
 	//console.log("get_logs - Start...");
 	

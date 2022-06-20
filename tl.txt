@@ -2,6 +2,9 @@
 
 ===## DONE ##===
 
+[04/2022]
+- Decomission pi2b >> Move NodeRed (Cron)
+
 [02/2022]
 - Decomission pi2b >> Move NodeRed (Feed)
 - Decomission pi2b >> Remove pi2 Storage

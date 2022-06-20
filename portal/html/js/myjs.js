@@ -27,7 +27,7 @@ function get_pi_status(){
 			}]
 		}
 		*/
-		['kodi', 'hub'].forEach(function(x){
+		['hub'].forEach(function(x){
 			
 			var obj = data.rows.find(z => z.id === x);
 			

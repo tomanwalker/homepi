@@ -1,0 +1,29 @@
+
+## install docker
+cd ~
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+
+sudo usermod -aG docker ${USER}
+su - $USER
+
+# Docker volumes = /home/pi/docker
+
+## Portainer
+docker run -d -p 9000:9000 \
+--name portainer --restart=always \
+--memory=128m \
+-v /var/run/docker.sock:/var/run/docker.sock \
+-v/home/pi/docker/portainer:/data \
+portainer/portainer-ce:latest
+
+## Redis
+
+## Mosquitto
+
+## Portal
+
+## Ngixnx + TLS
+
+
+

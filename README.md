@@ -27,9 +27,22 @@ Mobile apps: Trello, Discord, Kore (Kodi remote control)
 sudo apt update && sudo apt -y upgrade
 
 # Raspi - turn off swap
+dphys-swapfile swapoff
+dphys-swapfile uninstall
+
+## increase swap
+sudo dphys-swapfile swapoff
+sudo nano /etc/dphys-swapfile
+sudo dphys-swapfile setup
+sudo dphys-swapfile swapon
+
 # Raspi - video memory ~ 128 MB
 # Raspi - turn ON - ssh / vnc
 # Preferably - on Router [DHCP] set Static IP, so that RPi always has the same local IP
+
+# K8S / docker change
+cgroup_memory=1 cgroup_enable=memory 
+
 
 ```
 
@@ -44,11 +57,16 @@ df
 
 ### drive (kodi)
 ```
-#-mount drive-
-sudo nano -w /etc/fstab
+sudo blkid
+sudo mkdir -p /mnt/usb
+sudo chown -R pi:pi /mnt/usb
 
-#-add a line-
-/dev/sda1       /mnt/mydrive    ntfs-3g permissions,locale=en_US.utf8   0       2
+sudo nano /etc/fstab
+## FAT
+/dev/sda5       /mnt/usb vfat uid=pi,gid=pi 0 0
+
+#-NTFS-
+/dev/sda5       /mnt/mydrive    ntfs-3g permissions,locale=en_US.utf8   0       2
 
 # reboot and check drive permsissions
 sudo reboot now

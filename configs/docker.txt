@@ -14,14 +14,34 @@ docker run -d -p 9000:9000 \
 --name portainer --restart=always \
 --memory=128m \
 -v /var/run/docker.sock:/var/run/docker.sock \
--v/home/pi/docker/portainer:/data \
+-v /home/pi/docker/portainer:/data \
 portainer/portainer-ce:latest
 
 ## Redis
+docker run -d -p 6379:6379 \
+--name redis --restart=always \
+--memory=100m \
+-v /home/pi/docker/redis:/data \
+redis:latest
 
 ## Mosquitto
+docker run -d -p 1883:1883 \
+--name mosquitto --restart=always \
+--memory=32m \
+ -v /home/pi/docker/mosquitto:/mosquitto \
+eclipse-mosquitto
+
+## Node-red
+docker run -d -p 1880:1880 \
+--name nodered --restart=always \
+--memory=192m \
+-v /home/pi/docker/node_red:/data \
+nodered/node-red
+
+# no GPIO native though
 
 ## Portal
+
 
 ## Ngixnx + TLS
 

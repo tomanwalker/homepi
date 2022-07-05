@@ -2,6 +2,13 @@
 
 ===## DONE ##===
 
+## 2022
+
+[05/2022]
+- Decomission pi2b >> Move NodeRed (Bot)
+- Move WebPortfolio to HUB >> TLS (Nginx)
+- Fix Portal >> Front page
+
 [04/2022]
 - Decomission pi2b >> Move NodeRed (Cron)
 
@@ -15,6 +22,7 @@
 - Equipment >> Light control to Portal
 - Decomission pi2b >> Add Storage to PI4 (modify backups)
 
+## 2021
 [12/2021]
 - Reminders v2 - NodeRed change
 - Lights >> Light Status
